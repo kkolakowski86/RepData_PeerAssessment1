@@ -7,12 +7,24 @@ output:
 
 
 ## Loading and preprocessing the data
-
+```{r}
+unzip('activity.zip')
+rawData <- read.csv('activity.csv')
+```
 
 
 ## What is mean total number of steps taken per day?
+```{r}
+grouped = aggregate (steps ~ date, data = rawData, FUN=sum)
+barplot(
+    height    = grouped$steps, 
+    names.arg = grouped$date,
+    col       = rainbow(400), 
+    las       = 2
+)
 
 
+```
 
 ## What is the average daily activity pattern?
 
