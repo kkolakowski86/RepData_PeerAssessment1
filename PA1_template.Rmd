@@ -8,8 +8,10 @@ output:
 
 ## Loading and preprocessing the data
 ```{r}
+
 unzip('activity.zip')
 rawData <- read.csv('activity.csv')
+
 ```
 
 
@@ -23,11 +25,25 @@ barplot(
     las       = 2
 )
 
+grouped.mean <- mean(grouped$steps)
+ 
+
+grouped.median <- median(grouped$steps)
+
 
 ```
+mean is `r as.integer(grouped.mean)` and median is `r as.integer(grouped.median)`
 
 ## What is the average daily activity pattern?
+```{r}
+interval <- aggregate(steps ~ interval, data = rawData, FUN = mean)
+plot(interval, type = "l")
 
+maxRow <- which.max(interval$steps)
+maxInt <- interval$interval[maxRow]
+
+```
+Interval contains the maximum number of steps is #`r maxInt`
 
 
 ## Imputing missing values
