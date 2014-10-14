@@ -1,8 +1,8 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
 output: 
-  html_document:
-    keep_md: true
+html_document:
+keep_md: true
 ---
 
 
@@ -23,10 +23,10 @@ barplot(
     names.arg = grouped$date,
     col       = rainbow(400), 
     las       = 2
-)
+    )
 
 grouped.mean <- mean(grouped$steps)
- 
+
 
 grouped.median <- median(grouped$steps)
 
@@ -48,6 +48,45 @@ Interval contains the maximum number of steps is #`r maxInt`
 
 ## Imputing missing values
 
+```{r}
+
+naElements <- rawData[!complete.cases(rawData),]
+naElements <- nrow(naElements)
 
 
+```
+
+Total missing values - `r naElements`
+
+```{r}
+
+imputedData <- rawData; #copy of raw data
+
+
+getMeanByInterval <- function(int){
+    
+    round(interval[interval[,1] ==int, 2])
+        
+}
+
+i<-1;
+for (element in 1:nrow(imputedData))
+{ 
+    if (is.na(imputedData[element,1]))
+    { 
+        imputedData[element,]$steps <- getMeanByInterval(imputedData[element,]$interval)
+        
+
+      # imputedData[element, 1] = c[]
+    }
+}
+
+
+imputedByDate <- aggregate(steps ~ date, data = imputedData, FUN = sum)
+barplot(imputedByDate$steps, names.arg = imputedByDate$date, xlab = "date", ylab = "steps")
+
+mean(imputedByDate$steps)
+median(imputedByDate$steps)
+
+```
 ## Are there differences in activity patterns between weekdays and weekends?
