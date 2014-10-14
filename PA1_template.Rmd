@@ -5,6 +5,12 @@ html_document:
 keep_md: true
 ---
 
+```{r}
+
+Sys.setlocale("LC_TIME", "English")
+
+```
+
 
 ## Loading and preprocessing the data
 ```{r}
@@ -90,3 +96,47 @@ median(imputedByDate$steps)
 
 ```
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+getDayType <- function(d)
+{
+    
+    strDay <- weekdays(as.Date(d));
+   # print(strDay)
+    
+    if (strDay %in% c("Saturday","Sunday"))
+    {
+        return("weekend")
+    }
+    else
+    {
+        return ("weekday")
+    }
+}
+
+imputedData$dayType <- sapply(imputedData$date, getDayType)
+
+
+plotByDayType <- function(type)
+    {
+    
+     dayTypePlot <- aggregate(
+        steps ~ interval, 
+        data = imputedData, 
+        subset = imputedData$dayType == type, 
+        FUN = mean)
+     plot(dayTypePlot, type = "l", main = type)
+    }
+
+
+par(mfrow = c(1, 2))
+
+plotByDayType("weekend");
+plotByDayType("weekday");
+ 
+
+
+
+
+ 
+```
+
